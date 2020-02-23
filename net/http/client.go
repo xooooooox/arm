@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -86,7 +86,6 @@ func (c *Client) Do() error {
 	if err != nil {
 		return err
 	}
-	defer response.Body.Close()
 	// response header
 	c.ResHeader = make(map[string]string)
 	for k, v := range response.Header {
@@ -97,20 +96,12 @@ func (c *Client) Do() error {
 		c.ResHeader[k] = tmp
 	}
 	// head["StatusCode"] = fmt.Sprintf("%d",response.StatusCode)
+	defer response.Body.Close()
 	// response body
-	buffer := [128]byte{}
-	result := bytes.NewBuffer(nil)
-	for {
-		n, err := response.Body.Read(buffer[0:])
-		if err != nil {
-			if err == io.EOF {
-				result.Write(buffer[0:n])
-				break
-			}
-			return err
-		}
-		result.Write(buffer[0:n])
+	bs, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return err
 	}
-	c.ResBody = result.Bytes()
-	return nil
+	c.ResBody = bs
+	return err
 }
