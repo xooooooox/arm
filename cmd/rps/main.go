@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	uf "github.com/xooooooox/arm/utils/file"
 	un "github.com/xooooooox/arm/utils/name"
 	ut "github.com/xooooooox/arm/utils/time"
 	"log"
@@ -28,14 +29,16 @@ func Write() error {
 		}
 		s = fmt.Sprintf("%s}\n", s)
 	}
-	fileTmp := `
-package %s
+	fileTmp := `package %s
 
 // datetime %s
-
 %s
-
 `
 	s = fmt.Sprintf(fileTmp, Args.FilePkgName, ut.DateTime(), s)
-	return WriteFile(fmt.Sprintf("%s%s%s.go", Args.FileSaveDir, Args.DbName, Args.FileSuffixName), &s)
+	filename := fmt.Sprintf("%s%s%s.go", Args.FileSaveDir, Args.DbName, Args.FileSuffixName)
+	_, err := uf.WriteToFile(&s, filename, Args.FileSaveDir)
+	if err != nil {
+		return err
+	}
+	return uf.Fmt(Args.FileSaveDir + filename)
 }
