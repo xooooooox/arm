@@ -15,3 +15,4 @@
 
 # some go source file
 *_ignore.go
+*_tmp.go

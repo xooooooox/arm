@@ -1,4 +1,4 @@
 github.com/lib/pq v1.3.0 h1:/qkRGz8zljWiDcFvgpwUpwIAPu3r07TDvs3Rws+o/pU=
 github.com/lib/pq v1.3.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
-github.com/xooooooox/arm v0.0.0-20200304124642-a01354fe7f92 h1:rZOh1uGBu7GtDpdhuWOf2IN23+IOOVwgQlfCBrRSzys=
-github.com/xooooooox/arm v0.0.0-20200304124642-a01354fe7f92/go.mod h1:nh3vEewfUsPTfU7XAz032PkUSLqg6doK0WAk1uwQ3x0=
+github.com/xooooooox/arm v0.0.0-20200304125836-f36b625a7019 h1:O6So3VqwwtmltzGTqK3Q0mClT0jShUqjOk89CJvrJOw=
+github.com/xooooooox/arm v0.0.0-20200304125836-f36b625a7019/go.mod h1:nh3vEewfUsPTfU7XAz032PkUSLqg6doK0WAk1uwQ3x0=
