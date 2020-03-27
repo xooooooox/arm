@@ -19,6 +19,7 @@ type CmdArgs struct {
 	FilePkgName    string
 	FileSaveDir    string
 	FileSuffixName string
+	JsonTag        bool
 }
 
 var Version string
@@ -42,6 +43,7 @@ func init() {
 	flag.StringVar(&Args.FilePkgName, "N", "dao", "package name")
 	flag.StringVar(&Args.FileSaveDir, "d", "./", "output file disk address")
 	flag.StringVar(&Args.FileSuffixName, "S", "_tmp", "file suffix name")
+	flag.BoolVar(&Args.JsonTag, "j", false, "json tag")
 	flag.Parse()
 	// make sure dir name use filepath.Separator end
 	ds := string(filepath.Separator)
