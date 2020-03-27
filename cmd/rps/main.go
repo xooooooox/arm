@@ -31,7 +31,7 @@ func Write() error {
 				if !strings.HasSuffix(s, "`") {
 					s = fmt.Sprintf("%s`", s)
 				}
-				s = fmt.Sprintf("%s %s`", s, JsonTag(c))
+				s = fmt.Sprintf("%s%s`", s, JsonTag(c))
 			}
 			s = fmt.Sprintf("%s // %s\n", s, c.Comment)
 		}
