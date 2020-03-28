@@ -51,6 +51,14 @@ func Write() error {
 	return uf.Fmt(Args.FileSaveDir + filename)
 }
 
+// JsonTag
 func JsonTag(c Columns) string {
-	return fmt.Sprintf("json:\"%s\"", un.PascalToUnderline(c.Name))
+	ignores := strings.Split(Args.JsonIgnore, ",")
+	column := un.PascalToUnderline(c.Name)
+	for _, v := range ignores {
+		if column == v {
+			column = "-"
+		}
+	}
+	return fmt.Sprintf("json:\"%s\"", column)
 }

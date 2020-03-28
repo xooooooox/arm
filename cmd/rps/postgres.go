@@ -36,8 +36,8 @@ type Tables struct {
 }
 
 func PgTables() (result []Tables) {
-	query := "select relname as name,cast(obj_description(relfilenode,'pg_class') as varchar) as comment from pg_class c where relname in (select tablename from pg_tables where schemaname='public' and position('_2' in tablename)=0);"
-	rows, err := DB.Query(query)
+	query := "select relname as name,cast(obj_description(relfilenode,'pg_class') as varchar) as comment from pg_class c where relname in (select tablename from pg_tables where schemaname=$1 and position('_2' in tablename)=0) order by name asc;"
+	rows, err := DB.Query(query, Args.DbSchemaName)
 	if err != nil {
 		log.Println("sql error:", err.Error())
 	}
@@ -60,7 +60,7 @@ type Columns struct {
 }
 
 func PgColumns(table string) (result []Columns) {
-	rows, err := DB.Query(`select a.attnum as num,a.attname as name,concat_ws('',t.typname,SUBSTRING(format_type(a.atttypid,a.atttypmod) from '\(.*\)')) as type,d.description as comment from pg_class c,pg_attribute a,pg_type t,pg_description d where c.relname=$1 and a.attnum>0 and a.attrelid=c.oid and a.atttypid=t.oid and d.objoid=a.attrelid and d.objsubid=a.attnum;`, table)
+	rows, err := DB.Query(`select a.attnum as num,a.attname as name,concat_ws('',t.typname,SUBSTRING(format_type(a.atttypid,a.atttypmod) from '\(.*\)')) as type,d.description as comment from pg_class c,pg_attribute a,pg_type t,pg_description d where c.relname=$1 and a.attnum>0 and a.attrelid=c.oid and a.atttypid=t.oid and d.objoid=a.attrelid and d.objsubid=a.attnum order by num asc;`, table)
 	if err != nil {
 		log.Println("sql error:", err.Error())
 	}

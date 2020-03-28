@@ -20,6 +20,7 @@ type CmdArgs struct {
 	FileSaveDir    string
 	FileSuffixName string
 	JsonTag        bool
+	JsonIgnore     string
 }
 
 var Version string
@@ -44,6 +45,7 @@ func init() {
 	flag.StringVar(&Args.FileSaveDir, "d", "./", "output file disk address")
 	flag.StringVar(&Args.FileSuffixName, "S", "_tmp", "file suffix name")
 	flag.BoolVar(&Args.JsonTag, "j", false, "json tag")
+	flag.StringVar(&Args.JsonIgnore, "ji", "status,del", "json tag ignore columns, more columns for example: 'status,delete'")
 	flag.Parse()
 	// make sure dir name use filepath.Separator end
 	ds := string(filepath.Separator)
