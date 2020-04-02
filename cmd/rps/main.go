@@ -23,10 +23,14 @@ func main() {
 
 func Write() error {
 	s := ""
+	consts := "\n"
 	for _, t := range PgTables() {
-		s = fmt.Sprintf("%s\n// %s %s \n type %s struct {\n", s, un.UnderlineToPascal(t.Name), t.Comment, un.UnderlineToPascal(t.Name))
+		TableName := un.UnderlineToPascal(t.Name)
+		s = fmt.Sprintf("%s\n// %s %s \n type %s struct {\n", s, TableName, t.Comment, TableName)
 		for _, c := range PgColumns(t.Name) {
-			s = fmt.Sprintf("%s\t%s %s ", s, un.UnderlineToPascal(c.Name), PgTypeToGoType(c.Type))
+			ColumnName := un.UnderlineToPascal(c.Name)
+			consts = fmt.Sprintf("%s\n\t%s = \"%s\" // %s\n",consts,fmt.Sprintf("%s%s",TableName,ColumnName),c.Name,c.Comment)
+			s = fmt.Sprintf("%s\t%s %s ", s, ColumnName, PgTypeToGoType(c.Type))
 			if Args.JsonTag {
 				if !strings.HasSuffix(s, "`") {
 					s = fmt.Sprintf("%s`", s)
@@ -40,9 +44,13 @@ func Write() error {
 	fileTmp := `package %s
 
 // datetime %s
+
+const (
+%s
+)
 %s
 `
-	s = fmt.Sprintf(fileTmp, Args.FilePkgName, ut.DateTime(), s)
+	s = fmt.Sprintf(fileTmp, Args.FilePkgName, ut.DateTime(),consts, s)
 	filename := fmt.Sprintf("%s%s%s.go", Args.FileSaveDir, Args.DbName, Args.FileSuffixName)
 	_, err := uf.WriteToFile(&s, filename, Args.FileSaveDir)
 	if err != nil {
