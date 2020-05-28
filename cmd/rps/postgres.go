@@ -36,7 +36,7 @@ type Tables struct {
 }
 
 func PgTables() (result []Tables) {
-	query := "select relname as name,cast(obj_description(relfilenode,'pg_class') as varchar) as comment from pg_class c where relname in (select tablename from pg_tables where schemaname=$1 and position('_2' in tablename)=0) order by name asc;"
+	query := `SELECT "relname" AS "name", COALESCE(cast(obj_description("relfilenode",'pg_class') AS VARCHAR),'') AS "comment" FROM "pg_class" "c" WHERE ( "relname" IN ( SELECT "tablename" FROM "pg_tables" WHERE ( "schemaname" = $1 AND position('_2' IN "tablename") = 0 ) ) ) ORDER BY "name" ASC;`
 	rows, err := DB.Query(query, Args.DbSchemaName)
 	if err != nil {
 		log.Println("sql error:", err.Error())
@@ -60,7 +60,7 @@ type Columns struct {
 }
 
 func PgColumns(table string) (result []Columns) {
-	rows, err := DB.Query(`select a.attnum as num,a.attname as name,concat_ws('',t.typname,SUBSTRING(format_type(a.atttypid,a.atttypmod) from '\(.*\)')) as type,d.description as comment from pg_class c,pg_attribute a,pg_type t,pg_description d where c.relname=$1 and a.attnum>0 and a.attrelid=c.oid and a.atttypid=t.oid and d.objoid=a.attrelid and d.objsubid=a.attnum order by num asc;`, table)
+	rows, err := DB.Query(`SELECT "a"."attnum" AS "num", "a"."attname" AS "name", concat_ws('', "t"."typname", SUBSTRING(format_type("a"."atttypid", "a"."atttypmod") FROM '\(.*\)')) AS "type", "d"."description" AS "comment" FROM "pg_class" "c", "pg_attribute" "a", "pg_type" "t", "pg_description" "d" WHERE ( "c"."relname" = $1 AND "a"."attnum" > 0 AND "a"."attrelid"="c"."oid" AND "a"."atttypid" = "t"."oid" AND "d"."objoid" = "a"."attrelid" AND "d"."objsubid" = "a"."attnum" ) ORDER BY "num" ASC;`, table)
 	if err != nil {
 		log.Println("sql error:", err.Error())
 	}
